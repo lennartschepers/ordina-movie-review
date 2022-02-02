@@ -1,7 +1,7 @@
 {% if movie_list%}
     <ul>
     {% for movie in movie_list %}
-        <li><a href="/movies/{{ movie.id }}/">{{ movie.title }} ({{ movie.release_year }})</a>
+        <li><a href="{% url 'detail' movie.id %}">{{ movie.title }} ({{ movie.release_year }})</a>
             <p>rating: {{ movie.rating }}</p>
         </li>
 
