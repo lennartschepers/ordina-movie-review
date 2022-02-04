@@ -1,3 +1,18 @@
-<h1>{{ movie.title }} ({{movie.release_year}})</h1>
-<p>{{ movie.rating }}</p>
-<p>{{ movie.description }}</p>
+<div class="movie">
+    <h1>{{ movie.title }} ({{movie.release_year}})</h1>
+    <p>{{ movie.rating }}</p>
+    <p>{{ movie.description }}</p>
+</div>
+<div class="reviews">
+    <h3>Reviews</h3>
+  <form action="" method="post">
+    {% csrf_token %}
+
+    {{ form.as_p }}
+    <input type="submit" value="OK">
+</form>
+    {% for review in movie.review_set.all %}
+    <p> {{review.rating }}</p>
+    <p>{{ review.body }}</p>
+    {% endfor %}
+</div>

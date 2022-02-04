@@ -1,5 +1,7 @@
 from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404
+
+from .forms import ReviewForm
 from .models import Movie
 
 def index(request):
@@ -12,5 +14,15 @@ def movies(request):
 
 def  detail(request, movie_id):
     movie = get_object_or_404(Movie, pk=movie_id)
-    return render(request, 'moviereviewapp/detail.html', {'movie': movie})
+    if request.method == "POST":
+        form = ReviewForm(request.POST)
+        if form.is_valid():
+            review = form.save(commit=False)
+            review.movie = movie
+            review.save()
+        else:
+            return render(request, 'moviereviewapp/detail.html', {'movie': movie, 'form': form})
+
+    form = ReviewForm()
+    return render(request, 'moviereviewapp/detail.html', {'movie': movie, 'form': form})
 
