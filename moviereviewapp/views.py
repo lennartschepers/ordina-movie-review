@@ -1,7 +1,8 @@
 from django.http import HttpResponse, Http404
-from django.shortcuts import render, get_object_or_404
-
-from .forms import ReviewForm
+from django.shortcuts import render, get_object_or_404, redirect
+from django.contrib.auth import login
+from django.contrib.auth.hashers import make_password
+from .forms import ReviewForm, SignInForm, RegisterForm
 from .models import Movie
 
 def index(request):
@@ -26,3 +27,31 @@ def  detail(request, movie_id):
     form = ReviewForm()
     return render(request, 'moviereviewapp/detail.html', {'movie': movie, 'form': form})
 
+def signin(request):
+    if request.method == "POST":
+        form = SignInForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.email
+            user.is_superuser = False
+            user.save()
+        else:
+            return render(request, 'moviereviewapp/login.html', {'form': form})
+    form = SignInForm()
+    return render(request, 'moviereviewapp/login.html', {'form': form})
+
+def register(request):
+    if request.method == "POST":
+        form = RegisterForm(request.POST)
+        if form.is_valid():
+            user = form.save(commit=False)
+            user.username = user.email
+            user.password = make_password(user.password)
+            user.is_superuser = False
+            user.save()
+            login(request, user)
+            return redirect(movies)
+        else:
+            return render(request, 'moviereviewapp/register.html', {'form': form})
+    form = RegisterForm()
+    return render(request, 'moviereviewapp/register.html', {'form': form})
