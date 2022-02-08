@@ -3,6 +3,8 @@
     {% for movie in movie_list %}
         <li><a href="{% url 'detail' movie.id %}">{{ movie.title }} ({{ movie.release_year }})</a>
             <p>rating: {{ movie.rating }}</p>
+            {% load static %}
+            <img src="{{movie.poster.url}}" alt="poster">
         </li>
 
     {% endfor %}
