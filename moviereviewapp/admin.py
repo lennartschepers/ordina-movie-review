@@ -1,4 +1,20 @@
 from django.contrib import admin
-from .models import Movie
+from django.contrib.auth.admin import UserAdmin
 
-admin.site.register(Movie)
+from .models import Movie, Review, User
+
+admin.site.register(User, UserAdmin)
+
+
+class ReviewInline(admin.StackedInline):
+    model = Review
+    extra = 1
+
+
+class MovieAdmin(admin.ModelAdmin):
+    inlines = [ReviewInline]
+
+
+admin.site.register(Movie, MovieAdmin)
+
+

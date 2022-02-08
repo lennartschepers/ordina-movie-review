@@ -1,6 +1,7 @@
 from django import forms
-from .models import Review
-from django.contrib.auth.models import User
+from django.contrib.auth.forms import UserCreationForm, UsernameField
+
+from .models import Review, User
 
 class ReviewForm(forms.ModelForm):
     class Meta:
@@ -13,8 +14,8 @@ class SignInForm(forms.ModelForm):
         fields = ['email', 'password']
         widgets = {'password': forms.PasswordInput()}
 
-class RegisterForm(forms.ModelForm):
+class RegisterForm(UserCreationForm):
     class Meta:
         model = User
-        fields = ['first_name', 'last_name', 'email', 'password']
-        widgets = {'password': forms.PasswordInput(), 'email': forms.EmailInput(attrs={'required': True})}
+        fields = ['username', 'first_name', 'last_name', 'email']
+        field_classes = {'username': UsernameField}

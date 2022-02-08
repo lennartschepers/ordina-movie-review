@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     'moviereviewapp'
 ]
 
+AUTH_USER_MODEL = 'moviereviewapp.User'
+
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
