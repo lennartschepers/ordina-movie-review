@@ -10,3 +10,12 @@
 {% else %}
     <p>No movies are available.</p>
 {% endif %}
+
+{%comment%} Checks if use is logged in  {%endcomment%}
+{% if user.is_authenticated %}
+  Hi {{ user.username }}!
+   <p><a href="{% url 'logout' %}">Log Out</a></p>
+{% else %}
+  <p>You are not logged in</p>
+  <a href="{% url 'login' %}">login</a>
+{% endif %}
