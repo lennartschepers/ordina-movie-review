@@ -38,6 +38,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # tailwind and theme are apps that provide tailwind functionality in django
+    'tailwind',
+    'theme',
+    'django-browser-reload',
+
     'moviereviewapp'
 ]
 
@@ -51,6 +56,11 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    "django_browser_reload.middleware.BrowserReloadMiddleware",
+]
+
+INTERNAL_IPS = [
+    "127.0.0.1",
 ]
 
 ROOT_URLCONF = 'ordina_movie_review.urls'
@@ -131,3 +141,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/movies'
 LOGOUT_REDIRECT_URL = '/movies'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'moviereviewapp/media/moviereviewapp')
+MEDIA_URL = '/media/'
+
+TAILWIND_APP_NAME = 'theme'

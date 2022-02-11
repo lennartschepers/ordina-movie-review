@@ -1,3 +1,5 @@
+{% extends "base.html" %}
+{% block content %}
 {% if movie_list%}
     <ul>
     {% for movie in movie_list %}
@@ -20,3 +22,4 @@
   <a href="{% url 'login' %}">login</a>
 {% endif %}
 <a href="{% url 'addmovie' %}">Add a movie</a>
+{% endblock %}
