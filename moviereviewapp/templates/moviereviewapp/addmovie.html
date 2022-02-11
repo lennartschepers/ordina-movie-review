@@ -1,0 +1,9 @@
+<div class="movieForm">
+    <h3>Add Movie </h3>
+    <form action="" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+        {{ form.as_p }}
+        <input type="submit" value="Submit">
+    </form>
+</div>

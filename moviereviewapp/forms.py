@@ -1,12 +1,14 @@
 from django import forms
 from django.contrib.auth.forms import UserCreationForm, UsernameField
 
-from .models import Review, User
+from .models import Review, User, Movie
+
 
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
         fields = ['body', 'rating']
+
 
 class SignInForm(forms.ModelForm):
     class Meta:
@@ -14,8 +16,15 @@ class SignInForm(forms.ModelForm):
         fields = ['email', 'password']
         widgets = {'password': forms.PasswordInput()}
 
+
 class RegisterForm(UserCreationForm):
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email']
         field_classes = {'username': UsernameField}
+
+
+class MovieForm(forms.ModelForm):
+    class Meta:
+        model = Movie
+        fields = ['title', 'description', 'rating', 'release_year', 'poster']
