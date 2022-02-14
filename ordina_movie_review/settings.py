@@ -11,6 +11,7 @@ https://docs.djangoproject.com/en/4.0/ref/settings/
 """
 
 from pathlib import Path
+import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+
     'moviereviewapp'
 ]
 
@@ -51,6 +53,10 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+]
+
+INTERNAL_IPS = [
+    "127.0.0.1",
 ]
 
 ROOT_URLCONF = 'ordina_movie_review.urls'
@@ -71,7 +77,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'ordina_movie_review.wsgi.application'
+#WSGI_APPLICATION = 'ordina_movie_review.wsgi.application'
 
 
 # Database
@@ -83,7 +89,8 @@ DATABASES = {
         'NAME': 'ordinamovie',
         'USER': 'root',
         'PASSWORD': 'root',
-        'HOST': 'localhost',
+        # postgres for docker container, else localhost
+        'HOST': 'postgres',
         'PORT': '',
     }
 }
@@ -131,3 +138,7 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/movies'
 LOGOUT_REDIRECT_URL = '/movies'
+MEDIA_ROOT = os.path.join(BASE_DIR, 'moviereviewapp/media/moviereviewapp')
+MEDIA_URL = '/media/'
+
+TAILWIND_APP_NAME = 'theme'

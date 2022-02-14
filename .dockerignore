@@ -1,0 +1,9 @@
+**
+!moviereviewapp/**
+!ordina_movie_review/**
+!theme/**
+!.dockerignore
+!Dockerfile
+!entrypoint.sh
+!manage.py
+!requirements.txt
