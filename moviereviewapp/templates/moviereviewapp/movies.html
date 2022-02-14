@@ -5,6 +5,7 @@
     {% for movie in movie_list %}
         <li><a href="{% url 'detail' movie.id %}">{{ movie.title }} ({{ movie.release_year }})</a>
             <p>rating: {{ movie.rating }}</p>
+            <a href="{% url 'detail' movie.id %}"><img src="{{ movie.poster.url }}" alt="poster"></a>
         </li>
 
     {% endfor %}

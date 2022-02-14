@@ -8,6 +8,7 @@ class Movie(models.Model):
     description = models.TextField(max_length=1000)
     rating = models.FloatField(null=True, blank=True, default=None)
     release_year = models.IntegerField(default=0)
+    poster = models.ImageField()
 
     def __str__(self):
         return f'{self.title} ({self.release_year})'
