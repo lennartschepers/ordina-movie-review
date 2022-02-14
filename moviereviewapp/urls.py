@@ -8,5 +8,7 @@ urlpatterns = [
     path('accounts/', include('django.contrib.auth.urls')),
     path('registration/register', views.register, name='register'),
 
+    path('addmovie/', views.addmovie, name='addmovie'),
+
 ]
 

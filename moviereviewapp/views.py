@@ -3,7 +3,7 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login
 from django.contrib.auth.hashers import make_password
-from .forms import ReviewForm, SignInForm, RegisterForm
+from .forms import ReviewForm, SignInForm, RegisterForm, MovieForm
 from .models import Movie
 
 def index(request):
@@ -52,3 +52,14 @@ def register(request):
             return render(request, 'moviereviewapp/register.html', {'form': form})
     form = RegisterForm()
     return render(request, 'moviereviewapp/register.html', {'form': form})
+
+def addmovie(request):
+    if request.method == "POST":
+        form = MovieForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect(movies)
+        else:
+            return render(request, 'moviereviewapp/register.html', {'form': form})
+    form = MovieForm
+    return render(request, 'moviereviewapp/addmovie.html', {'form': form})
