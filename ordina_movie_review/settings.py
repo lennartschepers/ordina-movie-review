@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # for adding classes to form inputs
+    'widget_tweaks',
+
     # tailwind and theme are apps that provide tailwind functionality in django
     'tailwind',
     'theme',

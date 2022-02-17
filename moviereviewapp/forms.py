@@ -18,6 +18,10 @@ class SignInForm(forms.ModelForm):
 
 
 class RegisterForm(UserCreationForm):
+    username = forms.CharField(max_length=15)
+    first_name = forms.CharField(required=True, max_length=20)
+    last_name = forms.CharField(required=True, max_length=20)
+    email = forms.EmailField(required=True)
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email']
