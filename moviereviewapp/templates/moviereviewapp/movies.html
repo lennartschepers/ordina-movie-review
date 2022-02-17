@@ -1,23 +1,43 @@
+{% extends "base.html" %}
+{% block content %}
 {% if movie_list%}
-    <ul>
+
+<div class="py-6 flex items-center justify-center sm:py-12">
+    <h2 class="text-indigo-500 font-semibold text-xl">Sort by</h2>
+    <select class="select ml-1">
+        <option selected>Latest</option>
+    </select>
+</div>
+<div class="grid xl:grid-cols-2 gap-0 lg:gap-4 xl:mx-32 items-center justify-center grid-cols-1">
     {% for movie in movie_list %}
-        <li><a href="{% url 'detail' movie.id %}">{{ movie.title }} ({{ movie.release_year }})</a>
-            <p>rating: {{ movie.rating }}</p>
-            <a href="{% url 'detail' movie.id %}"><img src="{{ movie.poster.url }}" alt="poster"></a>
-        </li>
+    <a href="{% url 'detail' movie.id %}">
+        <div class="max-h-96 py-6 flex flex-col max-w-min items-center justify-center sm:py-12">
+            <div class="py-3 sm:max-w-xl sm:mx-auto">
+                <div class="bg-white shadow-lg  border-gray-100 max-h-80	 border sm:rounded-3xl p-8 flex space-x-8">
+                    <div class="h-48 overflow-visible w-1/2">
+                        <img class="rounded-3xl h-72 shadow-lg object-contain" src="{{ movie.poster.url }}"
+                             alt="Poster">
+                    </div>
+                    <div class="flex flex-col w-1/2 space-y-4">
+                        <div class="flex justify-between items-start">
+                            <h2 class="text-3xl font-bold">{{ movie.title }}</h2>
+                            <div class="bg-yellow-400 font-bold rounded-xl p-2">{{ movie.rating }}</div>
+                        </div>
+                        <div>
+                            <div class="text-lg text-gray-800">{{ movie.release_year }}</div>
+                        </div>
+                        <p class=" text-gray-400 max-h-40 overflow-y-hidden truncate">{{ movie.description }}</p>
+                    </div>
 
+                </div>
+            </div>
+
+        </div>
+    </a>
     {% endfor %}
-    </ul>
+</div>
 {% else %}
-    <p>No movies are available.</p>
+<p>No movies are available.</p>
 {% endif %}
 
-{%comment%} Checks if use is logged in  {%endcomment%}
-{% if user.is_authenticated %}
-  Hi {{ user.username }}!
-   <p><a href="{% url 'logout' %}">Log Out</a></p>
-{% else %}
-  <p>You are not logged in</p>
-  <a href="{% url 'login' %}">login</a>
-{% endif %}
-<a href="{% url 'addmovie' %}">Add a movie</a>
+{% endblock %}

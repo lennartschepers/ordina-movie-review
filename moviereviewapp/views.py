@@ -10,7 +10,7 @@ def index(request):
     return HttpResponse("Test index page")
 
 def movies(request):
-    movie_list = Movie.objects.all()
+    movie_list = Movie.objects.all().order_by('id').reverse()
     context = {'movie_list': movie_list}
     return render(request, 'moviereviewapp/movies.html', context)
 
@@ -26,20 +26,18 @@ def  detail(request, movie_id):
             return render(request, 'moviereviewapp/detail.html', {'movie': movie, 'form': form})
 
     form = ReviewForm()
+    # range binding for rating stars in reviews
     return render(request, 'moviereviewapp/detail.html', {'movie': movie, 'form': form})
 
 def signin(request):
     if request.method == "POST":
         form = SignInForm(request.POST)
         if form.is_valid():
-            user = form.save(commit=False)
-            user.username = user.email
-            user.is_superuser = False
-            user.save()
+            form.save()
         else:
-            return render(request, 'moviereviewapp/login.html', {'form': form})
+            return render(request, '', {'form': form})
     form = SignInForm()
-    return render(request, 'moviereviewapp/login.html', {'form': form})
+    return render(request, '', {'form': form})
 
 def register(request):
     if request.method == "POST":
