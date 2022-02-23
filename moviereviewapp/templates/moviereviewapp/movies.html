@@ -3,10 +3,18 @@
 {% if movie_list%}
 
 <div class="py-6 flex items-center justify-center sm:py-12">
+    <script type="text/javascript">
+        function submitForm() {
+            document.movie_sort.submit();
+        }
+    </script>
     <h2 class="text-indigo-500 font-semibold text-xl">Sort by</h2>
-    <select class="select ml-1">
-        <option selected>Latest</option>
-    </select>
+    <form id=movie_sort" action="{% url 'movies' %}">
+        <select name="movie_sort" onChange='this.form.submit();' class="select ml-1">
+            <option value="latest">Latest</option>
+            <option value="oldest">Oldest</option>
+        </select>
+    </form>
 </div>
 <div class="grid xl:grid-cols-2 gap-0 lg:gap-4 xl:mx-32 items-center justify-center grid-cols-1">
     {% for movie in movie_list %}

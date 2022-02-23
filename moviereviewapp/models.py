@@ -10,6 +10,9 @@ class Movie(models.Model):
     release_year = models.IntegerField(default=0)
     poster = models.ImageField()
 
+    class Meta:
+        ordering = ['-id']
+
     def __str__(self):
         return f'{self.title} ({self.release_year})'
 
