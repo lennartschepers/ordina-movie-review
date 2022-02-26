@@ -3,9 +3,13 @@ from django.http import HttpResponse, Http404
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth import login
 from django.contrib.auth.hashers import make_password
+from django.core.files.storage import default_storage
+from django.core.files.temp import NamedTemporaryFile
+from django.core.files import File
 from .forms import ReviewForm, SignInForm, RegisterForm, MovieForm
 from .models import Movie
 from  django.db.models import Q
+from django.conf import settings
 import requests
 
 def index(request):
@@ -66,17 +70,39 @@ def addmovie(request):
 
     if request.method == "POST":
         movie_id = request.POST.get('movie_id')
-        detailed_res = requests.get('https://imdb-api.com/en/API/SearchMovie/k_xq770k6q/' + movie_id).json()
+        detailed_res = requests.get('https://imdb-api.com/en/API/Title/k_xq770k6q/' + movie_id).json()
+        print('detailed')
+        print(detailed_res)
+        img_url = detailed_res['image']
+        img_r = requests.get(img_url, stream=True)
+        if img_r.status_code == 200:
+            img_temp = NamedTemporaryFile(delete=True)
+            img_temp.write(img_r.content)
+            img_temp.flush()
+            filename = settings.MEDIA_ROOT+'/'+movie_id+img_url[-4:]
+            poster = default_storage.save(filename, img_temp)
         movie = {
-            'title': detailed_res.title,
-            'description': detailed_res.plot,
-            'release_year': detailed_res.releaseDate,
+            'title': detailed_res['title'],
+            'description': detailed_res['plot'],
+            'release_year': detailed_res['year'],
         }
-        form = MovieForm(movie, request.FILES)
+
+
+
+        poster = default_storage.open(filename)
+
+        print('XXXXXXX')
+        print(movie)
+
+        new_movie = Movie(movie)
+        new_movie.poster = poster
+        new_movie.save()
         if form.is_valid():
             form.save()
             return redirect(movies)
         else:
+            print('XXXXX')
+            print(form.errors)
             return render(request, 'moviereviewapp/register.html', {'form': form})
     form = MovieForm
     return render(request, 'moviereviewapp/addmovie.html', {'form': form, 'api_results': api_results})
