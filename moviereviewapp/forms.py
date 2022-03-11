@@ -7,14 +7,14 @@ from .models import Review, User, Movie
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ['body', 'rating']
+        fields = ["body", "rating"]
 
 
 class SignInForm(forms.ModelForm):
     class Meta:
         model = User
-        fields = ['email', 'password']
-        widgets = {'password': forms.PasswordInput()}
+        fields = ["email", "password"]
+        widgets = {"password": forms.PasswordInput()}
 
 
 class RegisterForm(UserCreationForm):
@@ -22,13 +22,14 @@ class RegisterForm(UserCreationForm):
     first_name = forms.CharField(required=True, max_length=20)
     last_name = forms.CharField(required=True, max_length=20)
     email = forms.EmailField(required=True)
+
     class Meta:
         model = User
-        fields = ['username', 'first_name', 'last_name', 'email']
-        field_classes = {'username': UsernameField}
+        fields = ["username", "first_name", "last_name", "email"]
+        field_classes = {"username": UsernameField}
 
 
 class MovieForm(forms.ModelForm):
     class Meta:
         model = Movie
-        fields = ['title', 'description', 'rating', 'release_year', 'poster']
+        fields = ["title", "description", "rating", "release_year"]
