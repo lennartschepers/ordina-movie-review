@@ -4,7 +4,7 @@ import requests
 from django.contrib.auth import login
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db.models import Q
-from django.http import HttpResponse
+from django.http import HttpResponse, HttpResponseServerError
 from django.shortcuts import render, get_object_or_404, redirect
 
 from .forms import ReviewForm, SignInForm, RegisterForm, MovieForm
@@ -95,21 +95,28 @@ def addmovie(request):
 
     if request.method == "POST":
         movie_id = request.POST.get("movie_id")
+
         detailed_res = requests.get(
             "https://imdb-api.com/en/API/Title/k_xq770k6q/" + movie_id
         ).json()
 
+        if Movie.objects.filter(title=detailed_res["title"]).exists():
+            print("movie already exists")
+            return redirect(movies)
+
         img_url = detailed_res['image']
-        img_temp = save_image(
-            url=img_url,
-            movie_id=movie_id
-        )
+        try:
+            img_temp = save_image(
+                url=img_url,
+                movie_id=movie_id
+            )
+        except requests.exceptions.MissingSchema:
+            return HttpResponseServerError('invalid response from img url, ID is wrong or API limit is exceeded')
 
         movie = {
             "title": detailed_res["title"],
             "description": detailed_res["plot"],
             "release_year": detailed_res["year"],
-            #'poster': img_temp if img_temp is not None else 'moviereviewapp/default.jpg'
         }
 
         form = MovieForm(movie)
