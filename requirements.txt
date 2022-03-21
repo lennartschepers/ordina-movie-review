@@ -2,3 +2,7 @@ django
 pillow
 django-tailwind
 django-widget-tweaks
+requests
+black
+flake8
+pylint
