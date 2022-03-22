@@ -17,13 +17,20 @@ def index(request):
 
 def movies(request):
     movie_query = request.GET.get("search")
+    movie_sort = request.GET.get("movie_sort")
     if movie_query:
         movie_list = Movie.objects.filter(
             Q(title__icontains=movie_query) | Q(description__icontains=movie_query)
         )
     else:
         movie_list = Movie.objects.all().order_by("-id")
-    context = {"movie_list": movie_list, "movie_query": movie_query}
+    if movie_sort == None or movie_sort == 'latest':
+        movie_list = movie_list.order_by("-id")
+    elif movie_sort == 'oldest':
+        movie_list = movie_list.order_by("id")
+    print(movie_query)
+    print(movie_sort)
+    context = {"movie_list": movie_list, "movie_query": movie_query, "movie_sort": movie_sort}
     return render(request, "moviereviewapp/movies.html", context)
 
 
