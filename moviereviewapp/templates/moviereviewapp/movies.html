@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-{% if movie_list%}
+{% if page_obj %}
 
 <div class="py-6 flex items-center justify-center sm:py-12">
     <script type="text/javascript">
@@ -17,7 +17,7 @@
     </form>
 </div>
 <div class="grid xl:grid-cols-2 gap-0 lg:gap-4 xl:mx-32 items-center justify-center grid-cols-1">
-    {% for movie in movie_list %}
+    {% for movie in page_obj %}
     <a href="{% url 'detail' movie.id %}">
         <div class="max-h-96 py-6 flex flex-col max-w-min items-center justify-center sm:py-12">
             <div class="py-3 sm:max-w-xl sm:mx-auto">
@@ -42,7 +42,25 @@
 
         </div>
     </a>
+
     {% endfor %}
+<div class="pagination">
+    <span class="step-links">
+        {% if page_obj.has_previous %}
+            <a href="?page=1">&laquo; first</a>
+            <a href="?page={{ page_obj.previous_page_number }}">previous</a>
+        {% endif %}
+
+        <span class="current">
+            Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+        </span>
+
+        {% if page_obj.has_next %}
+            <a href="?page={{ page_obj.next_page_number }}">next</a>
+            <a href="?page={{ page_obj.paginator.num_pages }}">last &raquo;</a>
+        {% endif %}
+    </span>
+</div>
 </div>
 {% else %}
 <p>No movies are available.</p>
