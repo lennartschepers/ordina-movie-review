@@ -126,6 +126,7 @@ def addmovie(request):
             instance.save()
             return redirect(movies)
         else:
+            print(form.errors)
             return render(
                 request,
                 "moviereviewapp/addmovie.html",
