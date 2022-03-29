@@ -103,7 +103,6 @@ def addmovie(request):
         detailed_res = requests.get(
             "https://imdb-api.com/en/API/Title/k_xq770k6q/" + movie_id
         ).json()
-        print(detailed_res)
 
         if Movie.objects.filter(title=detailed_res["title"]).exists():
             print("movie already exists")
