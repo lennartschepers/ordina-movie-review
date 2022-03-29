@@ -32,4 +32,4 @@ class RegisterForm(UserCreationForm):
 class MovieForm(forms.ModelForm):
     class Meta:
         model = Movie
-        fields = ["title", "description", "rating", "release_year"]
+        fields = ["title", "description", "release_year"]

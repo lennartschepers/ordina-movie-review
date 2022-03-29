@@ -115,6 +115,7 @@ def addmovie(request):
                 movie_id=movie_id
             )
         except requests.exceptions.MissingSchema:
+            print('invalid response from img url, ID is wrong or API limit is exceeded')
             return HttpResponseServerError('invalid response from img url, ID is wrong or API limit is exceeded')
 
         movie = {
