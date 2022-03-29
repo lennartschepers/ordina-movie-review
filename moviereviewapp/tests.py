@@ -1,14 +1,16 @@
 import http
 
 import django.urls
+import requests
+from django.test import TestCase
+from django.test.client import RequestFactory
+from django.test import Client
+from django.http import HttpResponse, HttpResponseServerError
+from django.db.utils import IntegrityError
 
 from .models import Movie, Review, User
 from django.contrib import auth
 from django.urls import reverse
-import requests
-from django.test.client import RequestFactory
-from django.test import Client
-from django.http import HttpResponse, HttpResponseServerError
 
 
 class TestMainViews(TestCase):
@@ -84,8 +86,8 @@ class TestMovieAndReview(TestCase):
 
     #given a movie in the db
     def setUp(self):
-        self.movie_pk = Movie.objects.create(title='Test Title', description='Test Description', rating=6.7, release_year=2021, poster='tmp/test.jpeg').id
-        Review.objects.create(movie__id=self.movie_pk, body='lorem ipsum', rating=5)
+        self.movie_pk = Movie.objects.create(title='Test Title', description='Test Description', release_year=2021, poster='tmp/test.jpeg').id
+        Review.objects.create(movie_id=self.movie_pk, body='lorem ipsum', rating=10)
 
     def test_movie_text_content(self):
         # when that movie is queried:
@@ -107,6 +109,12 @@ class TestMovieAndReview(TestCase):
         # the corresponding review that has that movie as fk should be deleted as well
         self.assertIsNone(review)
 
+    def test_review_rating(self):
+        movie = Movie.objects.get(pk=self.movie_pk)
+        with self.assertRaises(IntegrityError) as context:
+            Review.objects.create(movie_id=self.movie_pk, body='lorem ipsum', rating=15)
+        self.assertTrue("A rating value is valid between 1 and 10"
+                        in str(context.exception))
 
 class TestMoviePost(TestCase):
     def test_movie_post(self):

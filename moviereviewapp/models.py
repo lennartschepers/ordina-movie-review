@@ -1,6 +1,6 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
-from django.db.models import Avg
+from django.db.models import Avg, Q
 
 
 # Create your models here.
@@ -23,6 +23,14 @@ class Movie(models.Model):
 
 
 class Review(models.Model):
+    class Meta:
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(rating__gte=1) & models.Q(rating__lte=10),
+                name="A rating value is valid between 1 and 10"
+            )
+        ]
+
     class Rating(models.IntegerChoices):
         ONE = 1
         TWO = 2
