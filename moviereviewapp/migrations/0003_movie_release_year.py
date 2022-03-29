@@ -6,13 +6,13 @@ from django.db import migrations, models
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('moviereviewapp', '0002_remove_movie_release_year_movie_poster'),
+        ("moviereviewapp", "0002_remove_movie_release_year_movie_poster"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='movie',
-            name='release_year',
+            model_name="movie",
+            name="release_year",
             field=models.IntegerField(default=0),
         ),
     ]

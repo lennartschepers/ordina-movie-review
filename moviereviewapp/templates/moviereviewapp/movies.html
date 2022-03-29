@@ -1,15 +1,23 @@
 {% extends "base.html" %}
 {% block content %}
-{% if movie_list%}
+{% if page_obj %}
 
 <div class="py-6 flex items-center justify-center sm:py-12">
+    <script type="text/javascript">
+        function submitForm() {
+            document.movie_sort.submit();
+        }
+    </script>
     <h2 class="text-indigo-500 font-semibold text-xl">Sort by</h2>
-    <select class="select ml-1">
-        <option selected>Latest</option>
-    </select>
+    <form id=movie_sort" action="{% url 'movies' %}">
+        <select name="movie_sort" onChange='this.form.submit();' class="select ml-1">
+            <option value="latest">Latest</option>
+            <option value="oldest">Oldest</option>
+        </select>
+    </form>
 </div>
 <div class="grid xl:grid-cols-2 gap-0 lg:gap-4 xl:mx-32 items-center justify-center grid-cols-1">
-    {% for movie in movie_list %}
+    {% for movie in page_obj %}
     <a href="{% url 'detail' movie.id %}">
         <div class="max-h-96 py-6 flex flex-col max-w-min items-center justify-center sm:py-12">
             <div class="py-3 sm:max-w-xl sm:mx-auto">
@@ -34,7 +42,33 @@
 
         </div>
     </a>
+
     {% endfor %}
+</div>
+    <div class="btn-group text-center flex justify-center  mt-12 mb-16 pagination">
+    {% if page_obj.has_previous %}
+    <a class="btn btn-outline btn-primary pagination-action" href="?page=1">
+        <<
+    </a>
+    <a class="btn btn-outline btn-primary  pagination-action" href="?page={{ page_obj.previous_page_number }}">
+        <
+    </a>
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <span class="btn btn-outline btn-active pagination-number pagination-current">{{ num }}</span>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a class="btn btn-outline btn-primary pagination-number" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <a class="btn btn-outline btn-primary pagination-action" href="?page={{ page_obj.next_page_number }}">
+            >
+        </a>
+        <a class="btn btn-outline btn-primary pagination-action" href="?page={{ page_obj.paginator.num_pages }}">
+            >>
+        </a>
+    {% endif %}
 </div>
 {% else %}
 <p>No movies are available.</p>

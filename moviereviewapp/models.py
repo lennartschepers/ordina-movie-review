@@ -10,12 +10,14 @@ class Movie(models.Model):
     release_year = models.IntegerField(default=0)
     poster = models.ImageField()
 
+    class Meta:
+        ordering = ["-id"]
+
     def __str__(self):
-        return f'{self.title} ({self.release_year})'
+        return f"{self.title} ({self.release_year})"
 
 
 class Review(models.Model):
-
     class Rating(models.IntegerChoices):
         ONE = 1
         TWO = 2
@@ -30,4 +32,3 @@ class Review(models.Model):
 
 class User(AbstractUser):
     pass
-
