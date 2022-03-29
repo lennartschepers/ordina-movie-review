@@ -2,7 +2,7 @@ import http
 
 import django.urls
 from django.test import TestCase
-from .models import Movie, Review
+from .models import Movie, Review, User
 from django.contrib import auth
 
 # Create your tests here.
