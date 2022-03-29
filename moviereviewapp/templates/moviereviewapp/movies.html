@@ -29,7 +29,11 @@
                     <div class="flex flex-col w-1/2 space-y-4">
                         <div class="flex justify-between items-start">
                             <h2 class="text-3xl font-bold">{{ movie.title }}</h2>
-                            <div class="bg-yellow-400 font-bold rounded-xl p-2">{{ movie.rating }}</div>
+                            {% if movie.average_rating  == None %}
+                                <div class="bg-yellow-400 font-bold rounded-xl p-2">{{ movie.average_rating }}</div>
+                            {% else %}
+                                <div class="bg-yellow-400 font-bold rounded-xl p-2">{{ movie.average_rating | floatformat:1 }}</div>
+                            {% endif %}
                         </div>
                         <div>
                             <div class="text-lg text-gray-800">{{ movie.release_year }}</div>

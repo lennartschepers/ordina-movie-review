@@ -16,7 +16,11 @@
                      id="iconContext-star" viewBox="0 0 24 24" fill="#F5C518" role="presentation">
                     <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
                 </svg>
-                <p>{{ movie.rating }}/10</p>
+                {% if movie.average_rating  == None %}
+                    <p>This movie has no reviews yet</p>
+                {% else %}
+                    <p>{{ movie.average_rating | floatformat:1 }}/10</p>
+                {% endif %}
             </div>
         </div>
         <p>{{ movie.description }}</p>
@@ -47,6 +51,11 @@
                     <input type="radio" name="rating" value="3" class="appearance-none mask mask-star-2 bg-indigo-400">
                     <input type="radio" name="rating" value="4" class="appearance-none mask mask-star-2 bg-indigo-400">
                     <input type="radio" name="rating" value="5" class="appearance-none mask mask-star-2 bg-indigo-400">
+                    <input type="radio" name="rating" value="6" class="appearance-none mask mask-star-2 bg-indigo-400">
+                    <input type="radio" name="rating" value="7" class="appearance-none mask mask-star-2 bg-indigo-400">
+                    <input type="radio" name="rating" value="8" class="appearance-none mask mask-star-2 bg-indigo-400">
+                    <input type="radio" name="rating" value="9" class="appearance-none mask mask-star-2 bg-indigo-400">
+                    <input type="radio" name="rating" value="10" class="appearance-none mask mask-star-2 bg-indigo-400">
                     <div class="text-red-500 text-xs italic mt-1 ml-1">{{ form.rating.errors }}</div>
                 </div>
 
