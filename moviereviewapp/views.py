@@ -18,16 +18,22 @@ def index(request):
 
 def movies(request):
     movie_query = request.GET.get("search")
+    movie_sort = request.GET.get("movie_sort")
     if movie_query:
         movie_list = Movie.objects.filter(
             Q(title__icontains=movie_query) | Q(description__icontains=movie_query)
         )
     else:
         movie_list = Movie.objects.all().order_by("-id")
+
+    if movie_sort == None or movie_sort == 'latest':
+        movie_list = movie_list.order_by("-id")
+    elif movie_sort == 'oldest':
+        movie_list = movie_list.order_by("id")
     paginator = Paginator(movie_list, 10)
     page_number = request.GET.get('page')
     page_obj = paginator.get_page(page_number)
-    context = {"page_obj": page_obj, "movie_query": movie_query}
+    context = {"page_obj": page_obj, "movie_query": movie_query, "movie_sort": movie_sort}
     return render(request, "moviereviewapp/movies.html", context)
 
 

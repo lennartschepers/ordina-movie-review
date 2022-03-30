@@ -11,9 +11,10 @@
     <h2 class="text-indigo-500 font-semibold text-xl">Sort by</h2>
     <form id=movie_sort" action="{% url 'movies' %}">
         <select name="movie_sort" onChange='this.form.submit();' class="select ml-1">
-            <option value="latest">Latest</option>
-            <option value="oldest">Oldest</option>
+            <option value="latest" {% if movie_sort == 'latest' %} selected {% endif %}>Latest</option>
+            <option value="oldest" {%  if movie_sort == 'oldest' %} selected {% endif %}>Oldest</option>
         </select>
+        <input hidden type="text" name="search" {% if movie_query %} value="{{movie_query}}" {% endif %} >
     </form>
 </div>
 <div class="grid xl:grid-cols-2 gap-0 lg:gap-4 xl:mx-32 items-center justify-center grid-cols-1">
