@@ -6,7 +6,7 @@ from django.db.models import Avg, Q
 # Create your models here.
 class Movie(models.Model):
     title = models.CharField(max_length=100)
-    description = models.TextField(max_length=1000)
+    description = models.TextField(max_length=1500)
     release_year = models.IntegerField(default=0)
     poster = models.ImageField()
 
