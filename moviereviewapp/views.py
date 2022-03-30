@@ -9,6 +9,7 @@ from django.shortcuts import render, get_object_or_404, redirect
 
 from .forms import ReviewForm, SignInForm, RegisterForm, MovieForm
 from .models import Movie
+from django.core.paginator import Paginator
 
 
 def index(request):
@@ -23,7 +24,10 @@ def movies(request):
         )
     else:
         movie_list = Movie.objects.all().order_by("-id")
-    context = {"movie_list": movie_list, "movie_query": movie_query}
+    paginator = Paginator(movie_list, 10)
+    page_number = request.GET.get('page')
+    page_obj = paginator.get_page(page_number)
+    context = {"page_obj": page_obj, "movie_query": movie_query}
     return render(request, "moviereviewapp/movies.html", context)
 
 
@@ -111,6 +115,7 @@ def addmovie(request):
                 movie_id=movie_id
             )
         except requests.exceptions.MissingSchema:
+            print('invalid response from img url, ID is wrong or API limit is exceeded')
             return HttpResponseServerError('invalid response from img url, ID is wrong or API limit is exceeded')
 
         movie = {

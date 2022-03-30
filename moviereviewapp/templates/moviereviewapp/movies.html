@@ -1,6 +1,6 @@
 {% extends "base.html" %}
 {% block content %}
-{% if movie_list%}
+{% if page_obj %}
 
 <div class="py-6 flex items-center justify-center sm:py-12">
     <script type="text/javascript">
@@ -17,7 +17,7 @@
     </form>
 </div>
 <div class="grid xl:grid-cols-2 gap-0 lg:gap-4 xl:mx-32 items-center justify-center grid-cols-1">
-    {% for movie in movie_list %}
+    {% for movie in page_obj %}
     <a href="{% url 'detail' movie.id %}">
         <div class="max-h-96 py-6 flex flex-col max-w-min items-center justify-center sm:py-12">
             <div class="py-3 sm:max-w-xl sm:mx-auto">
@@ -29,7 +29,11 @@
                     <div class="flex flex-col w-1/2 space-y-4">
                         <div class="flex justify-between items-start">
                             <h2 class="text-3xl font-bold">{{ movie.title }}</h2>
-                            <div class="bg-yellow-400 font-bold rounded-xl p-2">{{ movie.rating }}</div>
+                            {% if movie.average_rating  == None %}
+                                <div class="bg-yellow-400 font-bold rounded-xl p-2">{{ movie.average_rating }}</div>
+                            {% else %}
+                                <div class="bg-yellow-400 font-bold rounded-xl p-2">{{ movie.average_rating | floatformat:1 }}</div>
+                            {% endif %}
                         </div>
                         <div>
                             <div class="text-lg text-gray-800">{{ movie.release_year }}</div>
@@ -42,7 +46,33 @@
 
         </div>
     </a>
+
     {% endfor %}
+</div>
+    <div class="btn-group text-center flex justify-center  mt-12 mb-16 pagination">
+    {% if page_obj.has_previous %}
+    <a class="btn btn-outline btn-primary pagination-action" href="?page=1">
+        <<
+    </a>
+    <a class="btn btn-outline btn-primary  pagination-action" href="?page={{ page_obj.previous_page_number }}">
+        <
+    </a>
+    {% endif %}
+    {% for num in page_obj.paginator.page_range %}
+        {% if page_obj.number == num %}
+            <span class="btn btn-outline btn-active pagination-number pagination-current">{{ num }}</span>
+        {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
+            <a class="btn btn-outline btn-primary pagination-number" href="?page={{ num }}">{{ num }}</a>
+        {% endif %}
+    {% endfor %}
+    {% if page_obj.has_next %}
+        <a class="btn btn-outline btn-primary pagination-action" href="?page={{ page_obj.next_page_number }}">
+            >
+        </a>
+        <a class="btn btn-outline btn-primary pagination-action" href="?page={{ page_obj.paginator.num_pages }}">
+            >>
+        </a>
+    {% endif %}
 </div>
 {% else %}
 <p>No movies are available.</p>
