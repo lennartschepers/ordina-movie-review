@@ -32,4 +32,7 @@ class RegisterForm(UserCreationForm):
 class MovieForm(forms.ModelForm):
     class Meta:
         model = Movie
-        fields = ["title", "description", "release_year"]
+        fields = ["title", "description", "release_year", "genres", "directors", "writers", "stars", "awards",
+                  "imdb_rating", "metacritic_rating", "runtime", "similars", "imdb_id"]
+
+

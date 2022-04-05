@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.db.models import Avg, Q
+from django.urls import reverse
 
 
 # Create your models here.
@@ -9,6 +10,17 @@ class Movie(models.Model):
     description = models.TextField(max_length=1500)
     release_year = models.IntegerField(default=0)
     poster = models.ImageField()
+    runtime = models.CharField(blank=True, max_length=20)
+    genres = models.CharField(blank=True, max_length=200)
+    directors = models.CharField(blank=True, max_length=200)
+    writers = models.CharField(blank=True, max_length=200)
+    stars = models.CharField(blank=True, max_length=200)
+    awards = models.CharField(blank=True, max_length=200)
+    imdb_rating = models.CharField(blank=True, max_length=20)
+    metacritic_rating = models.CharField(blank=True, max_length=20)
+    similars = models.TextField(blank=True)
+    imdb_id = models.CharField(blank=True, max_length=20)
+
 
     class Meta:
         ordering = ["-id"]
@@ -21,6 +33,12 @@ class Movie(models.Model):
         print(self.review_set.all().aggregate(Avg('rating')).get('rating__avg'))
         return self.review_set.all().aggregate(Avg('rating')).get('rating__avg')
 
+     # def get_url_if_imdb_id_exists(self, imdb_id):
+     #    if Movie.objects.filter(imdb_id=imdb_id):
+     #         ordina_id = Movie.objects.filter(imdb_id=imdb_id)
+     #         return reverse('detail', kwargs={'movie_id': ordina_id})
+     #    else:
+     #        return None
 
 class Review(models.Model):
     class Meta:
