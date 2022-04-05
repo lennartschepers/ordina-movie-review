@@ -1,6 +1,7 @@
 import os.path
 
 import requests
+import ast
 from django.contrib.auth import login
 from django.core.files.uploadedfile import SimpleUploadedFile
 from django.db.models import Q
@@ -39,6 +40,18 @@ def movies(request):
 
 def detail(request, movie_id):
     movie = get_object_or_404(Movie, pk=movie_id)
+    movie.genres = [genre.strip() for genre in movie.genres.split(',')]
+    movie.awards = movie.awards.split(',')
+
+    # make dictionary with imdb_id as key, Ordina id and average rating as values to check for existing similar movies
+    id_by_imdb_id = Movie.objects.all().values_list('imdb_id', 'id')
+    imdb_id_dict = {tuple[0]: [tuple[1]] for tuple in id_by_imdb_id}
+    for id in imdb_id_dict:
+        average_rating = Movie.objects.get(pk=imdb_id_dict[id][0]).average_rating
+        imdb_id_dict[id].append(average_rating)
+
+    if movie.similars:
+        movie.similars = ast.literal_eval(movie.similars)
     if request.method == "POST":
         form = ReviewForm(request.POST)
         if form.is_valid():
@@ -52,7 +65,8 @@ def detail(request, movie_id):
 
     form = ReviewForm()
     # range binding for rating stars in reviews
-    return render(request, "moviereviewapp/detail.html", {"movie": movie, "form": form})
+    return render(request, "moviereviewapp/detail.html", {"movie": movie, "form": form,
+                                                          "imdb_id_dict": imdb_id_dict})
 
 
 def signin(request):
@@ -122,12 +136,23 @@ def addmovie(request):
             )
         except requests.exceptions.MissingSchema:
             print('invalid response from img url, ID is wrong or API limit is exceeded')
+            print('the id is: ' + movie_id)
             return HttpResponseServerError('invalid response from img url, ID is wrong or API limit is exceeded')
 
         movie = {
             "title": detailed_res["title"],
             "description": detailed_res["plot"],
             "release_year": detailed_res["year"],
+            "genres": detailed_res["genres"],
+            "directors": detailed_res["directors"],
+            "writers": detailed_res["writers"],
+            "stars": detailed_res["stars"],
+            "awards": detailed_res["awards"],
+            "imdb_rating": detailed_res["imDbRating"],
+            "metacritic_rating": detailed_res["metacriticRating"],
+            "runtime": detailed_res["runtimeStr"],
+            "similars": detailed_res["similars"],
+            "imdb_id": detailed_res["id"]
         }
 
         form = MovieForm(movie)

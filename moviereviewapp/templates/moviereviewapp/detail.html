@@ -1,34 +1,112 @@
 {% extends "base.html" %}
+{% load imdb_id_convert %}
+{% load imdb_id_exists %}
+{% load imdb_id_average %}
 {% block content %}
-<div class="flex  flex-end justify-center mt-12 container mx-auto px-">
+<div class="flex  flex-end  justify-center mt-12 container max-w-7xl mx-auto">
     <div class="w-1/3 w-full">
-        <img src="{{ movie.poster.url }}" class="rounded-3xl float-right h-96 mr-6" alt="poster">
+        <img src="{{ movie.poster.url }}" class="rounded-3xl float-right w-full mr-6" alt="poster">
     </div>
-    <div class="w-2/3">
-        <div class="flex items-start justify-start mb-6">
+    <div class="w-2/3 mr-16 flex flex-col justify-between">
+    <div>
+        <div class="flex items-start justify-between mb-6">
             <div class="flex flex-col">
-                <h1 class="text-5xl text-gray-900 mr-6 font-bold">{{ movie.title }} </h1>
-                <h3 class="text-base ml-1 text-gray-500">{{ movie.release_year }}</h3>
+                <h1 class="text-5xl text-gray-900 mr-6 font-bold">{{ movie.title }}</h1>
+            <div class="flex">
+                <h3 class="text-base ml-1 text-gray-500 mr-2">{{ movie.release_year }}</h3>
+                {%  if movie.runtime %}
+                    &middot;
+                    <h3 class="text-base ml-2 text-gray-500">{{ movie.runtime }}</h3>
+                {% endif %}
             </div>
-            <div class="flex items-center mt-2">
+            </div>
+        <div class="ratings justify-end flex w-2/3 mt-4">
+
+            <div class="mr-3 flex-col inline-flex items-center">
+                <span class="text-gray-500 text-sm">Ordina rating</span>
+                <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
+                         class="ipc-icon ipc-icon--star AggregateRatingButton__RatingIcon-sc-1ll29m0-4 iAOIoP"
+                         id="iconContext-star" viewBox="0 0 24 24" fill="#818CF8" role="presentation">
+                        <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
+                    </svg>
+                    {% if movie.average_rating  == None %}
+                        <p>No reviews yet</p>
+                    {% else %}
+                        <p><span class="font-bold text-xl">{{ movie.average_rating | floatformat:1 }}</span><span class="text-gray-600">/10</span></p>
+                    {% endif %}
+                </div>
+            </div>
+            {% if movie.imdb_rating %}
+                <div class="mr-3 flex-col inline-flex items-center">
+                <span class="text-gray-500 text-sm">IMDb rating</span>
+                <div class="flex items-center">
                 <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
                      class="ipc-icon ipc-icon--star AggregateRatingButton__RatingIcon-sc-1ll29m0-4 iAOIoP"
                      id="iconContext-star" viewBox="0 0 24 24" fill="#F5C518" role="presentation">
                     <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
                 </svg>
-                {% if movie.average_rating  == None %}
-                    <p>This movie has no reviews yet</p>
-                {% else %}
-                    <p>{{ movie.average_rating | floatformat:1 }}/10</p>
-                {% endif %}
-            </div>
+                    <p><span class="font-bold text-xl">{{ movie.imdb_rating }}</span><span class="text-gray-600">/10</span></p>
+                </div>
+                </div>
+            {% endif %}
+            {% if movie.metacritic_rating %}
+                <div class="mr-3 flex-col inline-flex items-center">
+                <span class="text-gray-500 text-sm">Metacritic rating</span>
+                <div class="flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"
+                         class="ipc-icon ipc-icon--star AggregateRatingButton__RatingIcon-sc-1ll29m0-4 iAOIoP"
+                         id="iconContext-star" viewBox="0 0 24 24" fill="#F5C518" role="presentation">
+                        <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
+                    </svg>
+                    <p><span class="font-bold text-xl">{{ movie.metacritic_rating }}</span><span class="text-gray-600">/100</span></p>
+                </div>
+                </div>
+            {% endif %}
         </div>
-        <p>{{ movie.description }}</p>
+        </div>
+        {% if movie.genres %}
+            <div class="mb-6">
+            {% for genre in movie.genres %}
+                <span class="border p-2 rounded-2xl">{{ genre }}</span>
+            {% endfor %}
+            </div>
+        {% endif %}
+        <div class="mb-3">
+        <p class="max-w-3xl">{{ movie.description }}</p>
+        </div>
+        <div class="divide-y max-w-3xl">
+        {% if movie.directors %}
+            <div></div>
+            <div class="py-2">
+                <p class="text-lg"><span class="font-bold">Director </span>{{ movie.directors }}</p>
+            </div>
+        {% endif %}
+        {% if movie.writers %}
+            <div class="py-2">
+                <p class="text-lg"><span class="font-bold">Writer </span>{{ movie.writers }}</p>
+            </div>
+        {% endif %}
+        {% if movie.stars %}
+            <div class="py-2">
+                <p class="text-lg"><span class="font-bold">Stars </span>{{ movie.stars }}</p>
+            </div>
+            <div></div>
+        {% endif %}
+        </div>
+    </div>
+        {% if movie.awards %}
+            <div class="flex mb-1 flex justify-center mt-30 mr-10">
+                <p class=""><span class="block font-bold bg-indigo-500 border-2 border-indigo-500 rounded-l-lg text-white p-4"> {{ movie.awards.0 }} </span>
+                <p class="w-full flex justify-center"><span class="block w-full border-2 border-indigo-500 rounded-r-lg p-4"> {{ movie.awards.1 }} </span>
+            </div>
+        {% endif %}
     </div>
 </div>
-<div class="reviews mt-6 w-1/2 mx-auto">
-    <div class="flex flex-col w-full border-opacity-50">
-        <div class="divider">Reviews</div>
+<div class="reviews mt-12 max-w-7xl  mx-auto">
+    <div class="items-center -ml-5">
+        <div class="bg-indigo-500 inline px-0.5 pt-4 pb-2 mr-3 rounded"></div>
+        <h1 class="font-bold inline text-3xl ">Reviews</h1>
     </div>
 
     <div class="flex justify-start mt-6 mb-12 items-start">
@@ -92,4 +170,87 @@
     </div>
         {% endfor %}
 </div>
+
+{% if movie.similars %}
+    <div class="reviews mt-12 max-w-7xl  mx-auto">
+        <div class="items-center -ml-5">
+            <div class="bg-indigo-500 inline px-0.5 pt-4 pb-2 mr-3 rounded"></div>
+            <h1 class="font-bold inline text-3xl ">More like this</h1>
+        </div>
+    </div>
+    <div class="flex overflow-x-scroll my-6 max-w-7xl mx-auto">
+    {% for movie in movie.similars %}
+        <div class="relative w-72 rounded shadow-lg mb-4 rounded-2xl mr-4">
+            {% if movie.id|imdb_id_exists %}
+                <a href="{% url 'detail' movie.id|imdb_to_ordina_id %}">
+
+                 <div class="z-50 absolute top-0 left-0">
+                     <svg class="ipc-watchlist-ribbon__bg" width="34px" height="44px" viewBox="0 0 24 34" xmlns="http://www.w3.org/2000/svg" role="presentation">
+                         <polygon class="ipc-watchlist-ribbon__bg-ribbon" fill="#6366F1" points="24 0 0 0 0 32 12.2436611 26.2926049 24 31.7728343"></polygon>
+                         <polygon class="ipc-watchlist-ribbon__bg-hover" fill="#6366F1" points="24 0 0 0 0 32 12.2436611 26.2926049 24 31.7728343"></polygon>
+                         <polygon class="ipc-watchlist-ribbon__bg-shadow" fill="#6366F1" points="24 31.7728343 24 33.7728343 12.2436611 28.2926049 0 34 0 32 12.2436611 26.2926049"></polygon>
+                     </svg>
+                     <div class="ipc-watchlist-ribbon__icon absolute top-2 left-1" role="presentation">
+                         <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" class="ipc-icon ipc-icon--done ipc-icon--inline" viewBox="0 0 24 24" fill="6366F1" role="presentation">
+                             <path fill="none" d="M0 0h24v24H0V0z"></path>
+                             <path d="M9 16.2l-3.5-3.5a.984.984 0 0 0-1.4 0 .984.984 0 0 0 0 1.4l4.19 4.19c.39.39 1.02.39 1.41 0L20.3 7.7a.984.984 0 0 0 0-1.4.984.984 0 0 0-1.4 0L9 16.2z"></path>
+                         </svg>
+                     </div>
+                 </div>
+            {% endif %}
+            <div class="h-96 w-72">
+                  <img class="object-cover h-96 w-72 overflow-hidden rounded" src="{{ movie.image }}" alt="movie image">
+            </div>
+          <div class="px-6 py-4">
+            <div class="text-xl mb-2">{{ movie.title }}</div>
+          </div>
+          <div class="px-6 pt-4 pb-2">
+            <div class="flex justify-between items-center">
+            <div class="mb-4 flex items-center">
+            {% if movie.imDbRating %}
+              <div class="mb-4 flex items-center">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+                       class="ipc-icon ipc-icon--star AggregateRatingButton__RatingIcon-sc-1ll29m0-4 iAOIoP"
+                       id="iconContext-star" viewBox="0 0 24 24" fill="#F5C518" role="presentation">
+                      <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
+                  </svg>
+                  <span class="text-gray-500">{{ movie.imDbRating }}</span>
+              </div>
+            {% endif %}
+                  {% if movie.id in imdb_id_dict %}
+                      <div class="mb-4 ml-2 flex items-center">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30"
+                           class="ipc-icon ipc-icon--star AggregateRatingButton__RatingIcon-sc-1ll29m0-4 iAOIoP"
+                           id="iconContext-star" viewBox="0 0 24 24" fill="#818CF8" role="presentation">
+                          <path d="M12 17.27l4.15 2.51c.76.46 1.69-.22 1.49-1.08l-1.1-4.72 3.67-3.18c.67-.58.31-1.68-.57-1.75l-4.83-.41-1.89-4.46c-.34-.81-1.5-.81-1.84 0L9.19 8.63l-4.83.41c-.88.07-1.24 1.17-.57 1.75l3.67 3.18-1.1 4.72c-.2.86.73 1.54 1.49 1.08l4.15-2.5z"></path>
+                      </svg>
+                      <span class="text-gray-500">{{ movie.id|imdb_id_average }}</span>
+                      </div>
+                  {% endif %}
+                </div>
+                {% if movie.id in imdb_id_dict %}
+                    <div class="h-8 mb-5 mr-3 text-gray-800 hover:text-indigo-500 items-center">
+                    <span>View</span>
+                    </div>
+                    {% else %}
+                    <div class="mb-4 mr-3 text-indigo-500 items-center">
+                        <form method="post" action="/addmovie/">
+                            {% csrf_token %}
+                            <input name="movie_id" type="hidden" value="{{  movie.id  }}">
+                            <button class="mb-4 inline-flex items-center text-gray-800 hover:text-indigo-600" type="submit">Add
+                                <span class="ml-1 px-3 py-1 rounded-full bg-indigo-500 text-white text-lg hover:bg-indigo-600">+</span>
+                            </button>
+
+                        </form>
+                    </div>
+                {% endif %}
+              </div>
+          </div>
+            {% if movie.id|imdb_id_exists %}
+                </a>
+            {% endif %}
+        </div>
+    {% endfor %}
+    </div>
+{% endif %}
 {% endblock %}}

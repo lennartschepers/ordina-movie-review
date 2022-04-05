@@ -52,10 +52,10 @@
 </div>
     <div class="btn-group text-center flex justify-center  mt-12 mb-16 pagination">
     {% if page_obj.has_previous %}
-    <a class="btn btn-outline btn-primary pagination-action" href="?page=1">
+    <a class="btn pagination-action" href="?page=1">
         <<
     </a>
-    <a class="btn btn-outline btn-primary  pagination-action" href="?page={{ page_obj.previous_page_number }}">
+    <a class="btn pagination-action" href="?page={{ page_obj.previous_page_number }}">
         <
     </a>
     {% endif %}
@@ -63,14 +63,14 @@
         {% if page_obj.number == num %}
             <span class="btn btn-outline btn-active pagination-number pagination-current">{{ num }}</span>
         {% elif num > page_obj.number|add:'-3' and num < page_obj.number|add:'3' %}
-            <a class="btn btn-outline btn-primary pagination-number" href="?page={{ num }}">{{ num }}</a>
+            <a class="btn pagination-number" href="?page={{ num }}">{{ num }}</a>
         {% endif %}
     {% endfor %}
     {% if page_obj.has_next %}
-        <a class="btn btn-outline btn-primary pagination-action" href="?page={{ page_obj.next_page_number }}">
+        <a class="btn pagination-action" href="?page={{ page_obj.next_page_number }}">
             >
         </a>
-        <a class="btn btn-outline btn-primary pagination-action" href="?page={{ page_obj.paginator.num_pages }}">
+        <a class="btn pagination-action" href="?page={{ page_obj.paginator.num_pages }}">
             >>
         </a>
     {% endif %}
