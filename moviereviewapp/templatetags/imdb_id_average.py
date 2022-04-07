@@ -7,4 +7,7 @@ register = template.Library()
 def imdb_id_average(value):
     """ takes as argument an imdb_id, if this value exists it return the average rating of all ordina reviews"""
     movie = Movie.objects.filter(imdb_id=value).first()
-    return movie.average_rating
+    if movie.average_rating:
+        return round(movie.average_rating, 1)
+    else:
+        return None
