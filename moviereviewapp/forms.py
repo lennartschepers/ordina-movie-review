@@ -7,7 +7,7 @@ from .models import Review, User, Movie
 class ReviewForm(forms.ModelForm):
     class Meta:
         model = Review
-        fields = ["body", "rating"]
+        fields = ["title", "body", "rating"]
 
 
 class SignInForm(forms.ModelForm):

@@ -33,12 +33,6 @@ class Movie(models.Model):
         print(self.review_set.all().aggregate(Avg('rating')).get('rating__avg'))
         return self.review_set.all().aggregate(Avg('rating')).get('rating__avg')
 
-     # def get_url_if_imdb_id_exists(self, imdb_id):
-     #    if Movie.objects.filter(imdb_id=imdb_id):
-     #         ordina_id = Movie.objects.filter(imdb_id=imdb_id)
-     #         return reverse('detail', kwargs={'movie_id': ordina_id})
-     #    else:
-     #        return None
 
 class Review(models.Model):
     class Meta:
@@ -62,8 +56,11 @@ class Review(models.Model):
         TEN = 10
 
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    username = models.CharField(max_length=15)
+    title = models.CharField(max_length=100)
     body = models.TextField()
     rating = models.IntegerField(null=False, blank=False, choices=Rating.choices)
+    created_at = models.DateTimeField(auto_now_add=True)
 
 
 class User(AbstractUser):

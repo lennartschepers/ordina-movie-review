@@ -57,14 +57,15 @@ def detail(request, movie_id):
         if form.is_valid():
             review = form.save(commit=False)
             review.movie = movie
+            review.username = request.user.username
             review.save()
         else:
+            print(form.errors)
             return render(
                 request, "moviereviewapp/detail.html", {"movie": movie, "form": form}
             )
 
     form = ReviewForm()
-    # range binding for rating stars in reviews
     return render(request, "moviereviewapp/detail.html", {"movie": movie, "form": form,
                                                           "imdb_id_dict": imdb_id_dict})
 
