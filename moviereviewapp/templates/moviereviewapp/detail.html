@@ -268,50 +268,49 @@
                 </div>
             </label>
         </label>
-        <script type="text/javascript">
-            // show modal when review form contains errors
-            (function() {
-                errors = {%  if form.errors %} true {% else %} false {% endif %}
-                if (errors){
-                    document.getElementById('my-modal-4').checked = true;
-                }
-                const url = window.location;
-                let params = new URLSearchParams(url.search);
-                if (params.has('reviews') === true) {
-                   window.location.href = window.location.href.split("#")[0] + '#reviews'
-                }
-                // 'load more' functionality for reviews
-                let loadMore = [document.getElementById('loadMore'), document.getElementById('reviewsHeader')];
-                let loadItems = 4;
-                let hiddenClass = "hidden";
-
-
-                loadMore.forEach(function(elem) {
-                    elem.addEventListener("click", function () {
-                        [].forEach.call(document.querySelectorAll('.loadableReviews.hidden'), function (
-                            item,
-                            index
-                        ) {
-                            if (index < loadItems) {
-                                item.classList.remove(hiddenClass);
-                                loadMore[0].classList.remove(hiddenClass);
-                            }
-                            console.log(document.querySelectorAll('.hidden.loadableReviews'));
-                            if (document.querySelectorAll('.hidden.loadableReviews').length === 0) {
-                                loadMore[0].style.display = "none";
-                            }
-                        });
-
-                    });
-                })
-
-
-            })();
-        </script>
 
 
 </div>
 {% endif %}
+    <script type="text/javascript">
+        // show modal when review form contains errors
+        (function() {
+            errors = {%  if form.errors %} true {% else %} false {% endif %}
+            if (errors){
+                document.getElementById('my-modal-4').checked = true;
+            }
+            const url = window.location;
+            let params = new URLSearchParams(url.search);
+            if (params.has('reviews') === true) {
+                window.location.href = window.location.href.split("#")[0] + '#reviews'
+            }
+            // 'load more' functionality for reviews
+            let loadMore = [document.getElementById('loadMore'), document.getElementById('reviewsHeader')];
+            let loadItems = 4;
+            let hiddenClass = "hidden";
+
+            loadMore.forEach(function(elem) {
+                elem.addEventListener("click", function () {
+                    [].forEach.call(document.querySelectorAll('.loadableReviews.hidden'), function (
+                        item,
+                        index
+                    ) {
+                        if (index < loadItems) {
+                            item.classList.remove(hiddenClass);
+                            loadMore[0].classList.remove(hiddenClass);
+                        }
+                        console.log(document.querySelectorAll('.hidden.loadableReviews'));
+                        if (document.querySelectorAll('.hidden.loadableReviews').length === 0) {
+                            loadMore[0].style.display = "none";
+                        }
+                    });
+
+                });
+            })
+
+
+        })();
+    </script>
 
 {% if movie.similars %}
     <div class="reviews mt-12 max-w-7xl  mx-auto">
