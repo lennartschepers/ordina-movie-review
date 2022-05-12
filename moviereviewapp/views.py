@@ -9,33 +9,42 @@ from django.http import HttpResponse, HttpResponseServerError
 from django.shortcuts import render, get_object_or_404, redirect
 
 from .forms import ReviewForm, SignInForm, RegisterForm, MovieForm
-from .models import Movie
+from .models import Movie, Review, User
 from django.core.paginator import Paginator
+from django.views import View
+from django.views.generic import ListView
 
 
-def index(request):
-    return HttpResponse("Test index page")
+class Index(View):
+    def get(self, request):
+        return HttpResponse("Test index page")
 
 
-def movies(request):
-    movie_query = request.GET.get("search")
-    movie_sort = request.GET.get("movie_sort")
-    if movie_query:
-        movie_list = Movie.objects.filter(
-            Q(title__icontains=movie_query) | Q(description__icontains=movie_query)
-        )
-    else:
-        movie_list = Movie.objects.all().order_by("-id")
+class Movies(ListView):
+    template_name = "moviereviewapp/movies.html"
+    model = Movie
+    paginate_by = 10
 
-    if movie_sort == None or movie_sort == 'latest':
-        movie_list = movie_list.order_by("-id")
-    elif movie_sort == 'oldest':
-        movie_list = movie_list.order_by("id")
-    paginator = Paginator(movie_list, 10)
-    page_number = request.GET.get('page')
-    page_obj = paginator.get_page(page_number)
-    context = {"page_obj": page_obj, "movie_query": movie_query, "movie_sort": movie_sort}
-    return render(request, "moviereviewapp/movies.html", context)
+    def get_queryset(self):
+        self.query = self.request.GET.get('search')
+        self.sort = self.request.GET.get('movie_sort')
+        if self.query:
+            movie_list = Movie.objects.filter(
+                Q(title__icontains=self.query) | Q(description__icontains=self.query)
+            )
+        else:
+            movie_list = Movie.objects.all().order_by("-id")
+        if self.sort is None or self.sort == 'latest':
+            movie_list = movie_list.order_by("-id")
+        elif self.sort == 'oldest':
+            movie_list = movie_list.order_by("id")
+        return movie_list
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['movie_query'] = self.query
+        context['movie_sort'] = self.sort
+        return context
 
 
 def detail(request, movie_id):
@@ -70,6 +79,12 @@ def detail(request, movie_id):
                                                           "imdb_id_dict": imdb_id_dict})
 
 
+def profile(request, username):
+    profile_user = get_object_or_404(User, username=username)
+    reviews = Review.objects.filter(username=username)
+    return render(request, "moviereviewapp/profile.html", {"profile_user": profile_user, "reviews": reviews})
+
+
 def signin(request):
     if request.method == "POST":
         form = SignInForm(request.POST)
@@ -92,7 +107,6 @@ def register(request):
             return render(request, "moviereviewapp/register.html", {"form": form})
     form = RegisterForm()
     return render(request, "moviereviewapp/register.html", {"form": form})
-
 
 def save_image(url, movie_id):
     image_request = requests.get(url, stream=True)
